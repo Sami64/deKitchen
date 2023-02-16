@@ -16,10 +16,10 @@ public class GameInput : MonoBehaviour
         playerInputActions = new PlayerInputActions();
         playerInputActions.Enable();
         
-        playerInputActions.Player.Interact.performed += InteractOnperformed;
+        playerInputActions.Player.Interact.performed += InteractOnPerformed;
     }
 
-    private void InteractOnperformed(InputAction.CallbackContext obj)
+    private void InteractOnPerformed(InputAction.CallbackContext obj)
     {
         OnInteractAction?.Invoke(this, EventArgs.Empty);
     }

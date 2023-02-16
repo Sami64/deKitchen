@@ -2,10 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ClearCounter : MonoBehaviour
+public class ClearCounter : BaseCounter
 {
-    public void Interact()
+    
+
+    public override void Interact(Player player)
     {
-        Debug.Log("Interact Counter");
+        if (!HasKitchenObject())
+        {
+            if (player.HasKitchenObject())
+            {
+                player.GetKitchenObject().SetKitchenObjectParent(this);
+            }
+        }
+        else
+        {
+            if (!player.HasKitchenObject())
+            {
+                GetKitchenObject().SetKitchenObjectParent(player);
+            }
+        }
     }
 }
