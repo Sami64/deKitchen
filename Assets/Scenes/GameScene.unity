@@ -136,6 +136,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ClearCounter (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 5592575535096229428, guid: 5fea23db545c0449d8ac0ce8d6433d2e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8467471588879605753, guid: 5fea23db545c0449d8ac0ce8d6433d2e,
         type: 3}
       propertyPath: m_RootOrder
