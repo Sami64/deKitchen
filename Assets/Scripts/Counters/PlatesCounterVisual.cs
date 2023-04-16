@@ -19,7 +19,6 @@ public class PlatesCounterVisual : MonoBehaviour
         plateVisualGameObjectList = new List<GameObject>();
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         platesCounter.OnPlateSpawned += OnPlateSpawned;
