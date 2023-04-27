@@ -14,7 +14,7 @@ public class PlateIconsUI : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    void Start() 
     {
         plateKitchenObject.OnIngredientAdded += PlateKitchenObjectOnIngredientAdded;
     }

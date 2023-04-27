@@ -11,7 +11,9 @@ public class DeliveryManager : MonoBehaviour
 
     public event EventHandler RecipeSpawned;
     public event EventHandler RecipeCompleted;
-    
+    public event EventHandler RecipeSuccess;
+    public event EventHandler RecipeFailed;
+
     [SerializeField] private RecipeListSO recipeListSO;
 
     private List<RecipeSO> pendingRecipesSOList;
@@ -81,10 +83,12 @@ public class DeliveryManager : MonoBehaviour
                     // Remove from pending
                     pendingRecipesSOList.RemoveAt(i);
                     RecipeCompleted?.Invoke(this, EventArgs.Empty);
+                    RecipeSuccess?.Invoke(this, EventArgs.Empty);
                     return;
                 }
             }
         }
+        RecipeFailed?.Invoke(this, EventArgs.Empty);
     }
 
     public List<RecipeSO> GetPendingRecipeList() => pendingRecipesSOList;
