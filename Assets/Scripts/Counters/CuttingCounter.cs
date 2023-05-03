@@ -9,6 +9,7 @@ public class CuttingCounter : BaseCounter, IHasProgress
     public event EventHandler<IHasProgress.OnProgressChangedEventArgs> OnProgressChanged;
 
     public event EventHandler OnCut;
+    public static event EventHandler AnyCut;
     
     [SerializeField] private CuttingRecipeSO[] cuttingRecipeArray;
 
@@ -70,6 +71,7 @@ public class CuttingCounter : BaseCounter, IHasProgress
             cuttingProgress++;
             var cuttingRecipeSO = GetCuttingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO);
             OnCut?.Invoke(this, EventArgs.Empty);
+            AnyCut?.Invoke(this, EventArgs.Empty);
             OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs()
             {
                 progressNormalized = (float)cuttingProgress / cuttingRecipeSO.cuttingProgressMax

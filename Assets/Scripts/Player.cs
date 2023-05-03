@@ -4,17 +4,19 @@ using UnityEngine;
 public class Player : MonoBehaviour, IKitchenObjectParent
 {
     public static Player Instance { get; private set; }
-    
+
+    public event EventHandler PickedSomething;
+
     public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
 
     public class OnSelectedCounterChangedEventArgs : EventArgs
     {
         public BaseCounter selectedCounter;
     }
-    
+
     [SerializeField] private float moveSpeed = 4f;
     [SerializeField] private GameInput _gameInput;
-    
+
     private bool isWalking;
     private Vector3 lastInteractionDirection;
 
@@ -42,6 +44,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     private void GameInputOnOnInteractAlternateAction(object sender, EventArgs e)
     {
+        if (!GameManager.Instance.IsGamePlaying()) return;
         if (selectedCounter != null)
         {
             selectedCounter.InteractAlternate(this);
@@ -50,6 +53,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     private void GameInputOnOnInteractAction(object sender, EventArgs e)
     {
+        if (!GameManager.Instance.IsGamePlaying()) return;
         if (selectedCounter != null)
         {
             selectedCounter.Interact(this);
@@ -76,9 +80,10 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         {
             if (raycastHit.transform.TryGetComponent(out BaseCounter baseCounter))
             {
-                if(baseCounter != selectedCounter)
+                if (baseCounter != selectedCounter)
                     SetSelectedCounter(baseCounter);
-            }else
+            }
+            else
             {
                 SetSelectedCounter(null);
             }
@@ -92,8 +97,8 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     private void HandleMovement()
     {
         var input = _gameInput.GetMovementNormalized();
-        
-        
+
+
         var moveDirection = new Vector3(input.x, 0, input.y);
         float moveDistance = moveSpeed * Time.deltaTime;
         float playerRadius = .7f;
@@ -156,6 +161,11 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     public void SetKitchenObject(KitchenObject kitchenObject)
     {
         this.kitchenObject = kitchenObject;
+
+        if (kitchenObject != null)
+        {
+            PickedSomething?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     public KitchenObject GetKitchenObject() => kitchenObject;

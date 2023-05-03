@@ -18,6 +18,7 @@ public class DeliveryManagerUI : MonoBehaviour
     {
         DeliveryManager.Instance.RecipeSpawned += OnRecipeSpawned;
         DeliveryManager.Instance.RecipeCompleted += OnRecipeCompleted;
+        
     }
 
     private void OnRecipeCompleted(object sender, EventArgs e)

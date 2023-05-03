@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -21,7 +19,8 @@ public class DeliveryManager : MonoBehaviour
 
     private float spawnTimer;
     private float spawnTimerMax = 4f;
-    
+    int successfullRecipes;
+
 
     private void Awake()
     {
@@ -36,7 +35,7 @@ public class DeliveryManager : MonoBehaviour
         if (spawnTimer < 0f)
         {
             spawnTimer = spawnTimerMax;
-            if(pendingRecipesSOList.Count < pendingRecipeMax)
+            if (pendingRecipesSOList.Count < pendingRecipeMax)
             {
                 var recipe = recipeListSO.recipeSOList[Random.Range(0, recipeListSO.recipeSOList.Count)];
                 pendingRecipesSOList.Add(recipe);
@@ -82,6 +81,7 @@ public class DeliveryManager : MonoBehaviour
                     // Ingredients match
                     // Remove from pending
                     pendingRecipesSOList.RemoveAt(i);
+                    successfullRecipes++;
                     RecipeCompleted?.Invoke(this, EventArgs.Empty);
                     RecipeSuccess?.Invoke(this, EventArgs.Empty);
                     return;
@@ -92,4 +92,6 @@ public class DeliveryManager : MonoBehaviour
     }
 
     public List<RecipeSO> GetPendingRecipeList() => pendingRecipesSOList;
+
+    public int GetSuccessfullRecipes() => successfullRecipes;
 }
