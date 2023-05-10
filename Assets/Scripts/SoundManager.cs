@@ -8,20 +8,24 @@ public class SoundManager : MonoBehaviour
     public static SoundManager Instance { get; private set; }
     [SerializeField] private AudioClipRefsSO audioClipRefsSO;
 
+    float volume = 1f;
+
     private void Awake()
     {
         Instance = this;
+
+        volume = PlayerPrefs.GetFloat("SoundEffects", 1f);
     }
 
     private void Start()
     {
         DeliveryManager.Instance.RecipeSuccess += OnRecipeSuccess;
         DeliveryManager.Instance.RecipeFailed += OnRecipeFailed;
-        
+
         CuttingCounter.AnyCut += CuttingCounterOnAnyCut;
-        
+
         Player.Instance.PickedSomething += PlayerOnPickedSomething;
-        
+
         BaseCounter.AnyObjectPlacedHere += BaseCounterOnAnyObjectPlacedHere;
         TrashCounter.AnyObjectTrashed += TrashCounterOnAnyObjectTrashed;
     }
@@ -60,16 +64,16 @@ public class SoundManager : MonoBehaviour
         DeliveryCounter deliveryCounter = DeliveryCounter.Instance;
         PlaySound(audioClipRefsSO.deliverySuccess, deliveryCounter.transform.position);
     }
-    
+
     void PlaySound(AudioClip[] audioClipArray, Vector3 position, float volume = 1f)
     {
         PlaySound(audioClipArray[Random.Range(0, audioClipArray.Length)], position, volume);
     }
-    
 
-    void PlaySound(AudioClip audioClip, Vector3 position, float volume = 1f)
+
+    void PlaySound(AudioClip audioClip, Vector3 position, float volumeMultiplier = 1f)
     {
-        AudioSource.PlayClipAtPoint(audioClip, position, volume);
+        AudioSource.PlayClipAtPoint(audioClip, position, volume * volumeMultiplier);
     }
 
     public void PlayFootstepsSound(Vector3 position, float volume = 1f)
@@ -77,5 +81,20 @@ public class SoundManager : MonoBehaviour
         PlaySound(audioClipRefsSO.footstep, position, volume);
     }
 
-    
+
+    public void ChangeVolume()
+    {
+        volume += .1f;
+        if (volume > 1f)
+        {
+            volume = 0f;
+        }
+
+        PlayerPrefs.SetFloat("SoundEffects", volume);
+        PlayerPrefs.Save();
+    }
+
+    public float GetVolume() => volume;
+
+
 }

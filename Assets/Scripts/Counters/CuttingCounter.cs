@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class CuttingCounter : BaseCounter, IHasProgress
 {
@@ -10,11 +7,16 @@ public class CuttingCounter : BaseCounter, IHasProgress
 
     public event EventHandler OnCut;
     public static event EventHandler AnyCut;
-    
+
+    new public static void ResetStaticData()
+    {
+        AnyCut = null;
+    }
+
     [SerializeField] private CuttingRecipeSO[] cuttingRecipeArray;
 
     private int cuttingProgress;
-    
+
     public override void Interact(Player player)
     {
         // Counter has no object
@@ -29,13 +31,13 @@ public class CuttingCounter : BaseCounter, IHasProgress
                     // move object to counter
                     player.GetKitchenObject().SetKitchenObjectParent(this);
                     cuttingProgress = 0;
-                    
+
                     var cuttingRecipeSO = GetCuttingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO);
                     OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs()
                     {
                         progressNormalized = (float)cuttingProgress / cuttingRecipeSO.cuttingProgressMax
                     });
-                    
+
                 }
             }
         }
@@ -76,12 +78,12 @@ public class CuttingCounter : BaseCounter, IHasProgress
             {
                 progressNormalized = (float)cuttingProgress / cuttingRecipeSO.cuttingProgressMax
             });
-            
+
             if (cuttingProgress >= cuttingRecipeSO.cuttingProgressMax)
             {
                 // Get cut version of object
                 var outputKitchenObjectSO = GetOutputForInput(GetKitchenObject().GetKitchenObjectSO);
-                
+
                 GetKitchenObject().DestroySelf();
 
                 KitchenObject.SpawnKitchenObject(outputKitchenObjectSO, this);

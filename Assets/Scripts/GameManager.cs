@@ -19,14 +19,27 @@ public class GameManager : MonoBehaviour
     float countdownToStartTimer = 3f;
     float gamePlayingTimer;
     float gamePlayingTimerMax = 10f;
+    bool isGamePaused = false;
 
     public event EventHandler OnStateChanged;
+    public event EventHandler OnGamePaused;
+    public event EventHandler OnGameResumed;
 
     // Start is called before the first frame update
     void Awake()
     {
         Instance = this;
         state = State.WaitingToStart;
+    }
+
+    private void Start()
+    {
+        GameInput.Instance.OnPauseAction += GameInputOnPauseAction;
+    }
+
+    private void GameInputOnPauseAction(object sender, EventArgs e)
+    {
+        ToggleGamePause();
     }
 
     // Update is called once per frame
@@ -71,4 +84,19 @@ public class GameManager : MonoBehaviour
     public float GetCountdownToStartTimer() => countdownToStartTimer;
 
     public float GetGamePlayingTimerNormalized() => 1 - (gamePlayingTimer / gamePlayingTimerMax);
+
+    public void ToggleGamePause()
+    {
+        isGamePaused = !isGamePaused;
+        if (isGamePaused)
+        {
+            Time.timeScale = 0f;
+            OnGamePaused?.Invoke(this, EventArgs.Empty);
+        }
+        else
+        {
+            Time.timeScale = 1f;
+            OnGameResumed?.Invoke(this, EventArgs.Empty);
+        }
+    }
 }
